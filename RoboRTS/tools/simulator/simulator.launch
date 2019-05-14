@@ -1,0 +1,21 @@
+<launch>
+  <arg name="map"/>
+  <master auto="start"/>
+  
+  <param name="/use_sim_time" value="true"/>
+  <include file="$(find ydlidar)/launch/g41.launch" />
+  <!-- Run the map server -->
+  <node name="map_server" pkg="map_server" type="map_server" args="$(env ROBORTS_PATH)/tools/map/$(arg map).yaml" respawn="false" />
+  
+  <!-- Run the Stage Simulator -->
+  <node pkg="stage_ros" type="stageros" name="stageros" args="$(env ROBORTS_PATH)/tools/simulator/$(arg map).world" respawn="false" >
+    <remap from="base_scan" to="scan"/> 
+    <param name="base_watchdog_timeout" value="0.01"/>
+  </node>
+  <node pkg="tf" type="static_transform_publisher" name="map_odom" args="1.01 0.985 0 4.7124 0 0 map odom 100" />-->
+  <!--<node pkg="tf" type="static_transform_publisher" name="map_odom" args="1.01 0.985 0 0.0 0 0 map odom 100" />-->
+  <!-- Run the rviz -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(env ROBORTS_PATH)/tools/rviz/rm.rviz" />
+
+</launch>
+
